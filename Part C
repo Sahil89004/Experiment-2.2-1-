@@ -1,0 +1,72 @@
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Employee implements Serializable {
+    int id;
+    String name, designation;
+    double salary;
+
+    Employee(int id, String name, String designation, double salary) {
+        this.id = id;
+        this.name = name;
+        this.designation = designation;
+        this.salary = salary;
+    }
+
+    public String toString() {
+        return id + " " + name + " " + designation + " " + salary;
+    }
+}
+
+public class Main {
+    static final String FILE = "employees.dat";
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int choice;
+        do {
+            choice = sc.nextInt();
+            sc.nextLine();
+            switch(choice) {
+                case 1 -> addEmployee(sc);
+                case 2 -> displayEmployees();
+                case 3 -> System.out.println("Exit");
+            }
+        } while(choice != 3);
+        sc.close();
+    }
+
+    static void addEmployee(Scanner sc) {
+        int id = sc.nextInt();
+        sc.nextLine();
+        String name = sc.nextLine();
+        String designation = sc.nextLine();
+        double salary = sc.nextDouble();
+        sc.nextLine();
+
+        Employee emp = new Employee(id, name, designation, salary);
+        ArrayList<Employee> list = new ArrayList<>();
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE))) {
+            list = (ArrayList<Employee>) ois.readObject();
+        } catch (Exception ignored) {}
+
+        list.add(emp);
+
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE))) {
+            oos.writeObject(list);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    static void displayEmployees() {
+        ArrayList<Employee> list = new ArrayList<>();
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE))) {
+            list = (ArrayList<Employee>) ois.readObject();
+            for (Employee e : list) System.out.println(e);
+        } catch (Exception e) {
+            System.out.println("No employees found");
+        }
+    }
+}
