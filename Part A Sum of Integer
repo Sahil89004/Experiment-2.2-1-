@@ -1,0 +1,28 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        ArrayList<Integer> numbers = new ArrayList<>();
+        String line = sc.nextLine();
+        String[] tokens = line.split("\\s+");
+
+        for (String token : tokens) {
+            try {
+                numbers.add(Integer.parseInt(token)); // autoboxing
+            } catch (NumberFormatException e) {
+                // skip invalid input
+            }
+        }
+
+        int sum = 0;
+        for (Integer n : numbers) {
+            sum += n; // unboxing
+        }
+
+        System.out.println(sum);
+        sc.close();
+    }
+}
+
