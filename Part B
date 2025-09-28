@@ -1,0 +1,45 @@
+import java.io.*;
+import java.util.Scanner;
+
+class Student implements Serializable {
+    int studentID;
+    String name;
+    double grade;
+
+    Student(int id, String name, double grade) {
+        this.studentID = id;
+        this.name = name;
+        this.grade = grade;
+    }
+
+    public String toString() {
+        return studentID + " " + name + " " + grade;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int id = sc.nextInt();
+        sc.nextLine();
+        String name = sc.nextLine();
+        double grade = sc.nextDouble();
+
+        Student s = new Student(id, name, grade);
+
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("student.dat"))) {
+            oos.writeObject(s);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("student.dat"))) {
+            Student s2 = (Student) ois.readObject();
+            System.out.println(s2);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        sc.close();
+    }
+}
